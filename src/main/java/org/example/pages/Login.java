@@ -1,17 +1,21 @@
-package org.example;
+package org.example.pages;
 
 import io.appium.java_client.AppiumBy;
 import io.appium.java_client.android.AndroidDriver;
+import org.example.utils.GrowwUtils;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import java.net.MalformedURLException;
 import java.time.Duration;
 
 
-public class Login extends FirstTest
+
+public class Login extends GrowwUtils
 {
       public Login(AndroidDriver driver) {super(driver);}
 
     public void googlelogin() throws MalformedURLException, InterruptedException {
+        WebDriver driver = null;
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
         WebElement emailOption = driver.findElement(AppiumBy.id("com.google.android.gms:id/account_name"));
         emailOption.click();
