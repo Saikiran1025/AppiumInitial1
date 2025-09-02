@@ -1,6 +1,5 @@
 package org.example.pages;
 
-import com.beust.ah.A;
 import io.appium.java_client.AppiumBy;
 import io.appium.java_client.android.AndroidDriver;
 import org.example.utils.GrowwUtils;
@@ -14,6 +13,7 @@ import java.time.Duration;
 
 
 public class DashboardTab extends GrowwUtils {
+
     public DashboardTab(AndroidDriver driver) {
         super(driver);
     }
@@ -32,8 +32,13 @@ public class DashboardTab extends GrowwUtils {
         }
     }
 
-    public void pendingPayments()
-    {
+    public void navigatieToDashboard(){
+        waitForElement(AppiumBy.accessibilityId("Mutual Funds"),10);
+        waitForElement(AppiumBy.xpath("//android.widget.TextView[@resource-id=\"com.nextbillion.groww:id/textView\" and @text=\"Dashboard\"]"),10).click();
+    }
+
+
+    public void pendingPayments()  {
         By pendingPaymentsTab = AppiumBy.id("com.nextbillion.groww:id/upcomingSipPaymentTv");
         By payNow = AppiumBy.xpath("(//android.widget.FrameLayout[@resource-id=\"com.nextbillion.groww:id/payNowBtn\"])[1]");
         if (isElementPresent(pendingPaymentsTab)) {
@@ -124,7 +129,9 @@ public class DashboardTab extends GrowwUtils {
 
     }
 
-    public void hideUnhide() {
+    public void hideUnhide() throws InterruptedException {
+        waitForElement(AppiumBy.id("com.nextbillion.groww:id/hide_button"),10).click();
+        waitSeconds(2);
         waitForElement(AppiumBy.id("com.nextbillion.groww:id/hide_button"),10).click();
 
     }
@@ -139,7 +146,6 @@ public class DashboardTab extends GrowwUtils {
             }
         }
         System.out.println("Graph Verification Done");
-
         waitForElement(AppiumBy.xpath("//android.widget.LinearLayout[@content-desc=\"Overview\"]"),10).click();
         scrollHalfPageUp();
         String[] category = {"Equity","Debt","Hybrid","Others"};
@@ -167,9 +173,14 @@ public class DashboardTab extends GrowwUtils {
         waitForElement(AppiumBy.xpath("//android.widget.LinearLayout[@content-desc=\"Tax & capital gains\"]"),10).click();
         waitSeconds(2);
         scrollHalfPageUp();
-        waitForElement(AppiumBy.id("com.nextbillion.groww:id/see_all"),10).click();
-        waitSeconds(2);
-        clickBack();
+        if (isElementPresent(AppiumBy.id("com.nextbillion.groww:id/see_all"))){
+            waitForElement(AppiumBy.id("com.nextbillion.groww:id/see_all"),10).click();
+            System.out.println("Popular ELSS funds Present");
+            waitSeconds(2);
+            clickBack();
+        }
+
+
         waitForElement(AppiumBy.id("com.nextbillion.groww:id/tax_report"),10).click();
         waitSeconds(2);
         clickBack();

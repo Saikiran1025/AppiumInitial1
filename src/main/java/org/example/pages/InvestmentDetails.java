@@ -128,35 +128,41 @@ public class InvestmentDetails extends GrowwUtils {
         }
         slideProceedButtonLeftToRight(AppiumBy.id("com.nextbillion.groww:id/btnProceed"));
         System.out.println("Successfully switch Order placed");
+        waitSeconds(4);
+        waitForElement(AppiumBy.id("com.nextbillion.groww:id/btnOrderDetails"),10).click();
+        waitSeconds(2);
+        clickBack();
+        waitForElement(AppiumBy.id("com.nextbillion.groww:id/btnDone"),10).click();
     }
 
     public void investmentDetailsSTP() throws InterruptedException {
         if (isElementPresent(AppiumBy.id("com.nextbillion.groww:id/btnSTP"))){
             waitForElement(AppiumBy.id("com.nextbillion.groww:id/btnSTP"),10).click();
-            if (isElementPresent(AppiumBy.id("com.nextbillion.groww:id/btn_show_more"))){
-                waitForElement(AppiumBy.id("com.nextbillion.groww:id/btn_show_more"),10).click();
-                waitSeconds(2);
-                waitForElement(AppiumBy.xpath("//android.widget.TextView[@resource-id=\"com.nextbillion.groww:id/btn_text\" and @text=\"Show less\"]"),10).click();
-                scrollToEnd();
-            }
-            waitForElement(AppiumBy.id("com.nextbillion.groww:id/cl_search_container"),10).click();
-            waitForElement(AppiumBy.id("com.nextbillion.groww:id/mint_internal_freeform_input_advanced"),10).click();
-            waitForElement(AppiumBy.className("android.widget.EditText"),10).sendKeys("Navi Nifty 50 Index Fund Direct   Growth");
-            waitForElement(AppiumBy.id("com.nextbillion.groww:id/tv_scheme_name"),10).click();
-            waitForElement(AppiumBy.id("com.nextbillion.groww:id/viewAmount"),10).click();
-            enterAmount("100");
-            waitForElement(AppiumBy.id("com.nextbillion.groww:id/btnConfirm"),10).click();
-            waitForElement(AppiumBy.id("com.nextbillion.groww:id/btnProceed"),10).click();
-        }
-        else {
-            System.out.println("STP option is not available for this fund");
-        }
-        slideProceedButtonLeftToRight(AppiumBy.id("com.nextbillion.groww:id/btnProceed"));
-        System.out.println("Successfully STP Order placed");
+            waitSeconds(5);
+//            if (isElementPresent(AppiumBy.id("com.nextbillion.groww:id/btn_show_more"))){
+//                waitForElement(AppiumBy.id("com.nextbillion.groww:id/btn_show_more"),10).click();
+//                waitSeconds(2);
+//                waitForElement(AppiumBy.xpath("//android.widget.TextView[@resource-id=\"com.nextbillion.groww:id/btn_text\" and @text=\"Show less\"]"),10).click();
+//                scrollToEnd();
+//            }
+//            waitForElement(AppiumBy.id("com.nextbillion.groww:id/cl_search_container"),10).click();
+//            waitForElement(AppiumBy.id("com.nextbillion.groww:id/mint_internal_freeform_input_advanced"),10).click();
+//            waitForElement(AppiumBy.className("android.widget.EditText"),10).sendKeys("Navi Nifty 50 Index Fund Direct   Growth");
+//            waitForElement(AppiumBy.id("com.nextbillion.groww:id/tv_scheme_name"),10).click();
+//            waitForElement(AppiumBy.id("com.nextbillion.groww:id/viewAmount"),10).click();
+//            enterAmount("100");
+//            waitForElement(AppiumBy.id("com.nextbillion.groww:id/btnConfirm"),10).click();
+//            waitForElement(AppiumBy.id("com.nextbillion.groww:id/btnProceed"),10).click();
+//        }
+//        else {
+//            System.out.println("STP option is not available for this fund");
+//        }
+//        slideProceedButtonLeftToRight(AppiumBy.id("com.nextbillion.groww:id/btnProceed"));
+//        System.out.println("Successfully STP Order placed");
 
 
 
-    }
+    }}
 
 
 

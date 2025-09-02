@@ -72,12 +72,14 @@ public class GrowwUtils {
         List<WebElement> scrollables = driver.findElements(
                 AppiumBy.androidUIAutomator("new UiSelector().scrollable(true)"));
         if (!scrollables.isEmpty()) {
-            driver.findElement(AppiumBy.androidUIAutomator("new UiScrollable(new UiSelector().scrollable(true)).scrollToEnd(10)"));
+            driver.findElement(AppiumBy.androidUIAutomator(
+                    "new UiScrollable(new UiSelector().scrollable(true)).scrollToEnd(10)"));
         }
     }
 
     public void scrollToTop() {
-        List<WebElement> scrollables = driver.findElements(AppiumBy.androidUIAutomator("new UiSelector().scrollable(true)"));
+        List<WebElement> scrollables = driver.findElements(
+                AppiumBy.androidUIAutomator("new UiSelector().scrollable(true)"));
         if (!scrollables.isEmpty()) {
             driver.findElement(AppiumBy.androidUIAutomator(
                     "new UiScrollable(new UiSelector().scrollable(true)).scrollToBeginning(10)"));
@@ -172,7 +174,6 @@ public class GrowwUtils {
                 }
             }
             else {
-                System.out.println("Element is not clickable: " + locator.toString());
                 return false;
             }
             return true;

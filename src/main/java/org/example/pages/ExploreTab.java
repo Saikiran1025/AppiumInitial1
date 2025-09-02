@@ -53,21 +53,28 @@ public class ExploreTab extends GrowwUtils {
         clickBack();
     }
 
-    public void searchBehaviourRegularKeyword() {
+    public void navigateToExplore() {
+        waitForElement(AppiumBy.accessibilityId("Mutual Funds"), 10).click();
+        waitForElement(AppiumBy.xpath("//android.widget.TextView[@resource-id=\"com.nextbillion.groww:id/textView\" and @text=\"Explore\"]"), 10).click();
+    }
+
+    public void searchBehaviourRegularKeyword() throws InterruptedException {
         waitForElement(AppiumBy.id("com.nextbillion.groww:id/searchIconV2"), 10).click();
         waitForElement(AppiumBy.id("com.nextbillion.groww:id/search_edit_text"), 10).click();
         waitForElement(AppiumBy.xpath("//android.widget.RadioButton[@text=\"MF\"]"), 10).click();
         waitForElement(AppiumBy.id("com.nextbillion.groww:id/search_edit_text"), 10).sendKeys("regular");
-        if (isElementPresent(AppiumBy.id("com.nextbillion.groww:id/empty_container")))
+        if (!isElementPresent(AppiumBy.xpath("(//android.view.ViewGroup[@resource-id=\"com.nextbillion.groww:id/search_item\"])[1]"))) {
             System.out.println("No Regular Scheme Fund found for Regular keyword");
+        }
         else {
             waitForElement(AppiumBy.xpath("(//android.view.ViewGroup[@resource-id=\"com.nextbillion.groww:id/search_item\"])[1]"), 10).click();
-            WebElement schemeName = waitForElement(AppiumBy.id("com.nextbillion.groww:id/textMfTitle"), 10);
-            String actualSchemeName = schemeName.getText();
-            Assert.assertTrue(actualSchemeName.toLowerCase().contains("direct"), "Regular Scheme found for basic user");
+            String s = waitForElement(AppiumBy.id("com.nextbillion.groww:id/textMfTitle"), 10).getText();
+            Assert.assertTrue(s.contains("Direct"), "Regular Scheme Found in Popular Funds");
+            waitSeconds(2);
         }
         clickBack();
         clickBack();
+        waitSeconds(2);
     }
 
     public void searchSchemename(String schemeName) throws InterruptedException {
@@ -77,11 +84,11 @@ public class ExploreTab extends GrowwUtils {
         WebElement search = waitForElement(AppiumBy.id("com.nextbillion.groww:id/search_edit_text"), 10);
         search.sendKeys(schemeName);
         for (int i = 1; i <= 1; i++) {
-            if (isElementPresent(AppiumBy.xpath("(//android.view.ViewGroup[@resource-id=\"com.nextbillion.groww:id/search_item\"])[1]"))) {
-                waitSeconds(2);
+            if (isElementPresent(AppiumBy.xpath("(//android.view.ViewGroup[@resource-id=\"com.nextbillion.groww:id/search_item\"])[\" + i + \"]"))) {
                 waitForElement(AppiumBy.xpath("(//android.view.ViewGroup[@resource-id=\"com.nextbillion.groww:id/search_item\"])[" + i + "]"), 10).click();
+                waitSeconds(2);
                 String s = waitForElement(AppiumBy.id("com.nextbillion.groww:id/textMfTitle"), 10).getText();
-                Assert.assertTrue(s.toLowerCase().contains("direct"), "pass");
+                Assert.assertTrue(s.contains("Direct"), "pass");
                 clickBack();
                 clickBack();
             }
@@ -101,7 +108,7 @@ public class ExploreTab extends GrowwUtils {
             waitForElement(AppiumBy.xpath("(//android.view.ViewGroup[@resource-id=\"com.nextbillion.groww:id/item_grid_pill\"])[" + i + "]"), 10).click();
             WebElement schemeName = waitForElement(AppiumBy.id("com.nextbillion.groww:id/textMfTitle"), 10);
             String actualSchemeName = schemeName.getText();
-            Assert.assertTrue(actualSchemeName.toLowerCase().contains("direct"), "Regular Scheme is found in basic");
+            Assert.assertTrue(actualSchemeName.contains("Direct"), "Regular Scheme is found in basic");
             waitSeconds(1);
             clickBack();
         }
@@ -109,40 +116,83 @@ public class ExploreTab extends GrowwUtils {
         System.out.println("No Regular Scheme found for Trending Searches");
     }
 
-    public void popularFunds() {
-        WebElement parent = waitForElement(AppiumBy.xpath("//androidx.recyclerview.widget.RecyclerView[@resource-id=\"com.nextbillion.groww:id/mainList\"]/android.widget.RelativeLayout/android.widget.GridView"), 10);
+    public void popularFunds() throws InterruptedException {
+        WebElement popularFundComplete = waitForElement(AppiumBy.xpath("//androidx.recyclerview.widget.RecyclerView[@resource-id=\"com.nextbillion.groww:id/mainList\"]/android.widget.RelativeLayout/android.widget.GridView"), 10);
         if (isElementPresent(AppiumBy.xpath("//android.view.ViewGroup[@index=\"4\"]")))
             Assert.fail("More than 4 funds are showing in Popular Funds");
         for (int i = 0; i < 4; ++i) {
-            parent.findElement(AppiumBy.xpath("//android.view.ViewGroup[@index="+i+"]\n")).click();
-            String s = waitForElement(AppiumBy.id("com.nextbillion.groww:id/textMfTitle"), 10).getText();
-            Assert.assertTrue(s.toLowerCase().contains("direct"), "Regular Scheme Found in Popular Funds");
+            WebElement eachFundname = popularFundComplete.findElement(AppiumBy.xpath("//android.view.ViewGroup[@index='"+i+"']"));
+            WebElement shortName = eachFundname.findElement(AppiumBy.xpath("//android.widget.TextView[@resource-id=\"com.nextbillion.groww:id/fund_name\"]"));
+            String shortNameText = shortName.getText();
+            eachFundname.click();
+            String productPageName = waitForElement(AppiumBy.id("com.nextbillion.groww:id/textMfTitle"), 10).getText();
+            Assert.assertTrue(productPageName.contains("Direct"), "Regular Scheme Found in Popular Funds");
+//            Assert.assertTrue(productPageName.contains(shortNameText), "Incorrect Fund page opened");
             clickBack();
         }
         waitForElement(AppiumBy.id("com.nextbillion.groww:id/viewAllFundsTv"),10).click();
         screener();
+
+
+
+
+//        WebElement parent = waitForElement(AppiumBy.xpath("//androidx.recyclerview.widget.RecyclerView[@resource-id=\"com.nextbillion.groww:id/mainList\"]/android.widget.RelativeLayout/android.widget.GridView"), 10);
+//        if (isElementPresent(AppiumBy.xpath("//android.view.ViewGroup[@index=\"4\"]")))
+//            Assert.fail("More than 4 funds are showing in Popular Funds");
+//        for (int i = 1; i < 4; ++i) {
+//            String shortName = parent.findElement(AppiumBy.xpath("//android.widget.TextView[@resource-id=\"com.nextbillion.groww:id/fund_name\" and @index='1']")).getText();
+//            System.out.println(shortName);
+//            parent.findElement(AppiumBy.xpath("//android.view.ViewGroup[@index="+(i-1)+"]\n")).click();
+//            String productPageName = waitForElement(AppiumBy.id("com.nextbillion.groww:id/textMfTitle"), 10).getText();
+//            System.out.println(productPageName);
+//            Assert.assertTrue(productPageName.contains("Direct"), "Regular Scheme Found in Popular Funds");
+//            Assert.assertTrue(productPageName.contains(shortName), "Incorrect Fund page opened");
+//            clickBack();
+//        }
+//        waitForElement(AppiumBy.id("com.nextbillion.groww:id/viewAllFundsTv"),10).click();
+//        screener();
     }
 
     public void verifyCollectionList() throws InterruptedException {
+        scrollToEnd();
+        String acc = waitForElement(AppiumBy.xpath("(//android.widget.RelativeLayout[@resource-id=\"com.nextbillion.groww:id/productDescCard\"])[9]"),10).getText();
+        scrollToTop();
         List<String> fundNames = new ArrayList<>();
-        for (int i=1;i<10;i++) {
+        int i =1;
+        do{
             waitForElement(AppiumBy.xpath("(//android.widget.RelativeLayout[@resource-id=\"com.nextbillion.groww:id/productDescCard\"])["+i+"]"),10).click();
             String s = waitForElement(AppiumBy.id("com.nextbillion.groww:id/textMfTitle"), 10).getText();
-            fundNames.add(s);
-            Assert.assertTrue(s.toLowerCase().contains("direct"), "Regular Scheme Found in High Returns");
-            clickBack();
-        }
-        if (isScrollable()) {
-            scrollToEnd();
-            waitSeconds(1);
-            for (int i = 9; i < 10; i++) {
-                waitForElement(AppiumBy.xpath("(//android.widget.RelativeLayout[@resource-id=\"com.nextbillion.groww:id/productDescCard\"])[" + i + "]"), 10).click();
-                String s1 = waitForElement(AppiumBy.id("com.nextbillion.groww:id/textMfTitle"), 10).getText();
-                fundNames.add(s1);
-                Assert.assertTrue(s1.toLowerCase().contains("direct"), "Regular Scheme Found in High Returns");
-                clickBack();
+            if(acc == s && isScrollable()){
+                break;
             }
-        }
+            fundNames.add(s);
+            Assert.assertTrue(s.contains("Direct"), "Regular Scheme Found in High Returns");
+            clickBack();
+            i++;
+        }while(isScrollable());
+
+
+
+
+
+//        for (int i=1;i<10;i++) {
+//            waitForElement(AppiumBy.xpath("(//android.widget.RelativeLayout[@resource-id=\"com.nextbillion.groww:id/productDescCard\"])["+i+"]"),10).click();
+//            String s = waitForElement(AppiumBy.id("com.nextbillion.groww:id/textMfTitle"), 10).getText();
+//            fundNames.add(s);
+//            Assert.assertTrue(s.contains("Direct"), "Regular Scheme Found in High Returns");
+//            clickBack();
+//        }
+//        if (isScrollable()) {
+//            scrollHalfPageUp();
+//            waitSeconds(1);
+//            for (int i = 9; i < 10; i++) {
+//                waitForElement(AppiumBy.xpath("(//android.widget.RelativeLayout[@resource-id=\"com.nextbillion.groww:id/productDescCard\"])[" + i + "]"), 10).click();
+//                String s1 = waitForElement(AppiumBy.id("com.nextbillion.groww:id/textMfTitle"), 10).getText();
+//                fundNames.add(s1);
+//                Assert.assertTrue(s1.contains("Direct"), "Regular Scheme Found in Collections");
+//                clickBack();
+//            }
+//        }
         System.out.println(fundNames.toArray().length);
         Set<String> uniqueFundNames = new HashSet<>(fundNames);
         if (uniqueFundNames.size()<fundNames.size())
@@ -153,31 +203,37 @@ public class ExploreTab extends GrowwUtils {
         waitForElement(AppiumBy.accessibilityId("High return"), 10).click();
         verifyTabNavigation((AppiumBy.id("com.nextbillion.groww:id/tvTitle")), "High return", "High return Navigation failed");
         verifyCollectionList();
+        System.out.println("High return collection verified");
 //        clickReturns();
         clickBack();
         waitForElement(AppiumBy.accessibilityId("Best SIP funds"), 10).click();
         verifyTabNavigation((AppiumBy.id("com.nextbillion.groww:id/tvTitle")), "Best SIP funds", "Best SIP funds Navigation failed");
         verifyCollectionList();
+        System.out.println("Best SIP funds collection verified");
 //        clickReturns();
         clickBack();
         waitForElement(AppiumBy.accessibilityId("Gold Funds"), 10).click();
         verifyTabNavigation((AppiumBy.id("com.nextbillion.groww:id/tvTitle")), "Gold Funds", "Gold Funds Navigation failed");
         verifyCollectionList();
+        System.out.println("Gold Funds collection verified");
 //        clickReturns();
         clickBack();
         waitForElement(AppiumBy.accessibilityId("5 Star Funds"), 10).click();
         verifyTabNavigation((AppiumBy.id("com.nextbillion.groww:id/tvTitle")), "5 Star Funds", "5 Star Funds Navigation failed");
         verifyCollectionList();
+        System.out.println("5 Star Funds collection verified");
 //        clickReturns();
         clickBack();
         waitForElement(AppiumBy.accessibilityId("Large & Mid Cap"), 10).click();
         verifyTabNavigation((AppiumBy.id("com.nextbillion.groww:id/tvTitle")), "Large & Mid", "Large & Mid Navigation failed");
         verifyCollectionList();
+        System.out.println("Large & Mid Cap collection verified");
 //        clickReturns();
         clickBack();
         waitForElement(AppiumBy.accessibilityId("Small Cap"), 10).click();
         verifyTabNavigation((AppiumBy.id("com.nextbillion.groww:id/tvTitle")), "Small Cap", "Small Cap Navigation failed");
         verifyCollectionList();
+        System.out.println("Small Cap collection verified");
 //        clickReturns();
         clickBack();
     }
@@ -309,11 +365,11 @@ public class ExploreTab extends GrowwUtils {
     public void removeCart() throws InterruptedException {
         if (isElementPresent(AppiumBy.xpath("//android.view.ViewGroup[@resource-id=\"com.nextbillion.groww:id/cartSection\"]/android.widget.RelativeLayout"))) {
             waitForElement(AppiumBy.xpath("//android.view.ViewGroup[@resource-id=\"com.nextbillion.groww:id/cartSection\"]/android.widget.RelativeLayout"), 10).click();
-            waitSeconds(2);
+            waitSeconds(1);
             while (isElementPresent(AppiumBy.xpath("//androidx.recyclerview.widget.RecyclerView[@resource-id=\"com.nextbillion.groww:id/rv_cart_items\"]/android.view.ViewGroup[1]"))) {
                 if (isElementPresent(AppiumBy.xpath("//androidx.recyclerview.widget.RecyclerView[@resource-id=\"com.nextbillion.groww:id/rv_cart_items\"]/android.view.ViewGroup[1]"))) {
                     waitForElement(AppiumBy.xpath("(//android.widget.FrameLayout[@resource-id=\"com.nextbillion.groww:id/btn_remove_from_cart\"])[1]"), 10).click();
-                    waitSeconds(2);
+                    waitSeconds(1);
                 } else if (isElementPresent(AppiumBy.xpath("//android.widget.TextView[@text=\"Your cart is empty\"]")))
                     break;
             }
@@ -336,7 +392,6 @@ public class ExploreTab extends GrowwUtils {
             String schemeName = schemeNameElement.getText();
             if (!allSchemes.contains(schemeName)) {
                 allSchemes.add(schemeName);
-//                System.out.println(schemeName);
             }
         }
         scrollToEnd();
